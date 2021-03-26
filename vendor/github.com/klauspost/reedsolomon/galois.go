@@ -852,9 +852,6 @@ func galMultiply(a, b byte) byte {
 	return mulTable[a][b]
 }
 
-// amd64 indicates whether we are on an amd64 platform.
-var amd64 bool
-
 // Original function:
 /*
 // galMultiply multiplies to elements of the field.
@@ -902,4 +899,33 @@ func galExp(a byte, n int) byte {
 		logResult -= 255
 	}
 	return expTable[logResult]
+}
+
+func genAvx2Matrix(matrixRows [][]byte, inputs, outputs int, dst []byte) []byte {
+	if !avx2CodeGen {
+		panic("codegen not enabled")
+	}
+	total := inputs * outputs
+
+	// Duplicated in+out
+	wantBytes := total * 32 * 2
+	if cap(dst) < wantBytes {
+		dst = make([]byte, wantBytes)
+	} else {
+		dst = dst[:wantBytes]
+	}
+	for i, row := range matrixRows[:outputs] {
+		for j, idx := range row[:inputs] {
+			dstIdx := (j*outputs + i) * 64
+			dstPart := dst[dstIdx:]
+			dstPart = dstPart[:64]
+			lo := mulTableLow[idx][:]
+			hi := mulTableHigh[idx][:]
+			copy(dstPart[:16], lo)
+			copy(dstPart[16:32], lo)
+			copy(dstPart[32:48], hi)
+			copy(dstPart[48:64], hi)
+		}
+	}
+	return dst
 }
