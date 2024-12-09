@@ -2,11 +2,11 @@
 
 ## 特性
 * 断线重连: [scp协议介绍](https://github.com/ejoy/goscon/blob/master/protocol.md)
-* 加密： [dh64密钥交换](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange)及对称流加密
+* 加密: [dh64密钥交换](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange)及对称流加密
 * 负载均衡
 * 命名服务路由
 * 配置热更新
-* 支持`kcp`,`tcp`,`ws/wss`，且可以无缝切换
+* 支持`kcp`,`tcp`,`ws/wss`,且可以无缝切换
 
 ## 用法
 
@@ -42,7 +42,7 @@ go build -mod=vendor
 
 * config
 
-配置选项含义，请参考[config.go](https://github.com/ejoy/goscon/blob/master/config.go)
+配置选项含义,请参考[config.go](https://github.com/ejoy/goscon/blob/master/config.go)
 
 * run
 ```bash

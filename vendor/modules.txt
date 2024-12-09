@@ -1,10 +1,34 @@
 # github.com/beorn7/perks v1.0.0
+## explicit; go 1.12
 github.com/beorn7/perks/quantile
+# github.com/coreos/etcd v3.3.10+incompatible
+## explicit
+github.com/coreos/etcd/auth/authpb
+github.com/coreos/etcd/clientv3
+github.com/coreos/etcd/etcdserver/api/v3rpc/rpctypes
+github.com/coreos/etcd/etcdserver/etcdserverpb
+github.com/coreos/etcd/mvcc/mvccpb
+github.com/coreos/etcd/pkg/types
 # github.com/fsnotify/fsnotify v1.4.7
+## explicit
 github.com/fsnotify/fsnotify
+# github.com/gogo/protobuf v1.2.1
+## explicit
+github.com/gogo/protobuf/gogoproto
+github.com/gogo/protobuf/proto
+github.com/gogo/protobuf/protoc-gen-gogo/descriptor
 # github.com/golang/protobuf v1.3.1
+## explicit
 github.com/golang/protobuf/proto
+github.com/golang/protobuf/ptypes
+github.com/golang/protobuf/ptypes/any
+github.com/golang/protobuf/ptypes/duration
+github.com/golang/protobuf/ptypes/timestamp
+# github.com/gorilla/websocket v1.5.0
+## explicit; go 1.12
+github.com/gorilla/websocket
 # github.com/hashicorp/hcl v1.0.0
+## explicit
 github.com/hashicorp/hcl
 github.com/hashicorp/hcl/hcl/ast
 github.com/hashicorp/hcl/hcl/parser
@@ -16,78 +40,155 @@ github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/klauspost/cpuid v1.2.1
+## explicit
 github.com/klauspost/cpuid
 # github.com/klauspost/reedsolomon v1.9.3
+## explicit
 github.com/klauspost/reedsolomon
 # github.com/libp2p/go-reuseport v0.0.1
+## explicit
 github.com/libp2p/go-reuseport
 # github.com/magiconair/properties v1.8.0
+## explicit
 github.com/magiconair/properties
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
+## explicit
 github.com/matttproud/golang_protobuf_extensions/pbutil
 # github.com/mitchellh/mapstructure v1.1.2
+## explicit
 github.com/mitchellh/mapstructure
 # github.com/pelletier/go-toml v1.2.0
+## explicit
 github.com/pelletier/go-toml
 # github.com/pkg/errors v0.8.1
+## explicit
 github.com/pkg/errors
 # github.com/prometheus/client_golang v1.0.0
+## explicit
 github.com/prometheus/client_golang/prometheus
 github.com/prometheus/client_golang/prometheus/internal
 github.com/prometheus/client_golang/prometheus/promhttp
 # github.com/prometheus/client_model v0.0.0-20190129233127-fd36f4220a90
+## explicit; go 1.9
 github.com/prometheus/client_model/go
 # github.com/prometheus/common v0.4.1
+## explicit
 github.com/prometheus/common/expfmt
 github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg
 github.com/prometheus/common/model
 # github.com/prometheus/procfs v0.0.2
+## explicit
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 # github.com/spf13/afero v1.1.2
+## explicit
 github.com/spf13/afero
 github.com/spf13/afero/mem
 # github.com/spf13/cast v1.3.0
+## explicit
 github.com/spf13/cast
 # github.com/spf13/jwalterweatherman v1.0.0
+## explicit
 github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.3
+## explicit
 github.com/spf13/pflag
 # github.com/spf13/viper v1.4.0
+## explicit
 github.com/spf13/viper
 # github.com/templexxx/cpufeat v0.0.0-20180724012125-cef66df7f161
+## explicit
 github.com/templexxx/cpufeat
 # github.com/templexxx/xor v0.0.0-20181023030647-4e92f724b73b
+## explicit
 github.com/templexxx/xor
 # github.com/tjfoc/gmsm v1.0.1
+## explicit
 github.com/tjfoc/gmsm/sm4
 # github.com/xjdrew/glog v0.0.0-20191120014404-9a6d6b19a763
+## explicit
 github.com/xjdrew/glog
 # github.com/xjdrew/gosproto v0.1.0
+## explicit; go 1.13
 github.com/xjdrew/gosproto
 # github.com/xtaci/kcp-go v5.4.20+incompatible
+## explicit
 github.com/xtaci/kcp-go
-# golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
+# github.com/xtaci/lossyconn v0.0.0-20190602105132-8df528c0c9ae
+## explicit
+# golang.org/x/crypto v0.30.0
+## explicit; go 1.20
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/cast5
-golang.org/x/crypto/internal/subtle
+golang.org/x/crypto/internal/alias
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/salsa20
 golang.org/x/crypto/salsa20/salsa
 golang.org/x/crypto/tea
 golang.org/x/crypto/twofish
 golang.org/x/crypto/xtea
-# golang.org/x/net v0.0.0-20191011234655-491137f69257
+# golang.org/x/net v0.32.0
+## explicit; go 1.18
 golang.org/x/net/bpf
+golang.org/x/net/context
+golang.org/x/net/http/httpguts
+golang.org/x/net/http2
+golang.org/x/net/http2/hpack
+golang.org/x/net/idna
 golang.org/x/net/internal/iana
 golang.org/x/net/internal/socket
+golang.org/x/net/internal/timeseries
 golang.org/x/net/ipv4
 golang.org/x/net/ipv6
-# golang.org/x/sys v0.0.0-20190412213103-97732733099d
+golang.org/x/net/trace
+# golang.org/x/sys v0.28.0
+## explicit; go 1.18
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.3.0
+# golang.org/x/text v0.21.0
+## explicit; go 1.18
+golang.org/x/text/secure/bidirule
 golang.org/x/text/transform
+golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
+# google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8
+## explicit
+google.golang.org/genproto/googleapis/rpc/status
+# google.golang.org/grpc v1.21.0
+## explicit
+google.golang.org/grpc
+google.golang.org/grpc/balancer
+google.golang.org/grpc/balancer/base
+google.golang.org/grpc/balancer/roundrobin
+google.golang.org/grpc/binarylog/grpc_binarylog_v1
+google.golang.org/grpc/codes
+google.golang.org/grpc/connectivity
+google.golang.org/grpc/credentials
+google.golang.org/grpc/credentials/internal
+google.golang.org/grpc/encoding
+google.golang.org/grpc/encoding/proto
+google.golang.org/grpc/grpclog
+google.golang.org/grpc/health/grpc_health_v1
+google.golang.org/grpc/internal
+google.golang.org/grpc/internal/backoff
+google.golang.org/grpc/internal/balancerload
+google.golang.org/grpc/internal/binarylog
+google.golang.org/grpc/internal/channelz
+google.golang.org/grpc/internal/envconfig
+google.golang.org/grpc/internal/grpcrand
+google.golang.org/grpc/internal/grpcsync
+google.golang.org/grpc/internal/syscall
+google.golang.org/grpc/internal/transport
+google.golang.org/grpc/keepalive
+google.golang.org/grpc/metadata
+google.golang.org/grpc/naming
+google.golang.org/grpc/peer
+google.golang.org/grpc/resolver
+google.golang.org/grpc/resolver/dns
+google.golang.org/grpc/resolver/passthrough
+google.golang.org/grpc/stats
+google.golang.org/grpc/status
+google.golang.org/grpc/tap
 # gopkg.in/yaml.v2 v2.2.2
+## explicit
 gopkg.in/yaml.v2
