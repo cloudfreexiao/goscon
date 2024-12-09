@@ -4,7 +4,7 @@ go 1.23
 
 require (
 	github.com/coreos/etcd v3.3.10+incompatible
-	github.com/gorilla/websocket v1.5.0
+	github.com/gorilla/websocket v1.5.3
 	github.com/libp2p/go-reuseport v0.0.1
 	github.com/prometheus/client_golang v1.0.0
 	github.com/spf13/viper v1.4.0
