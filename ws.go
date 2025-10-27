@@ -31,9 +31,7 @@ func (h *wsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (l *WSListener) Accept() (net.Conn, error) {
-	c := ws.NewConn(<-l.connChan, websocket.BinaryMessage,
-		configItemInt("ws_option.frame_size"),
-		configItemTime("ws_option.read_timeout"))
+	c := ws.NewConn(<-l.connChan)
 
 	if glog.V(1) {
 		glog.Infof("accept new ws connection: addr=%s", c.RemoteAddr())

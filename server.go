@@ -30,12 +30,12 @@ func pump(id int, tag string, dst net.Conn, src net.Conn, ch chan<- int) error {
 	for {
 		nr, er := src.Read(buf)
 		if glog.V(2) {
-			glog.Infof("recv packet: id=%d, tag=%s, addr=%s, sz=%d, err=%v", id, tag, src.RemoteAddr(), nr, er)
+			glog.Infof("recv packet: id=%d, tag=%s, addr=%s, sz=%d, err=%v\n", id, tag, src.RemoteAddr(), nr, er)
 		}
 		if nr > 0 {
 			nw, ew := dst.Write(buf[0:nr])
 			if glog.V(2) {
-				glog.Infof("send packet: id=%d, tag=%s, addr=%s, sz=%d, err=%v", id, tag, dst.RemoteAddr(), nw, ew)
+				glog.Infof("send packet: id=%d, tag=%s, addr=%s, sz=%d, err=%v\n", id, tag, dst.RemoteAddr(), nw, ew)
 			}
 			if nw > 0 {
 				packets++
@@ -53,7 +53,7 @@ func pump(id int, tag string, dst net.Conn, src net.Conn, ch chan<- int) error {
 	}
 
 	if glog.V(1) {
-		glog.Infof("pair pump: id=%d, tag=%s, addr1=%s, addr2=%s, err=%v", id, tag, src.RemoteAddr(), dst.RemoteAddr(), err)
+		glog.Infof("pair pump: id=%d, tag=%s, addr1=%s, addr2=%s, err=%v\n", id, tag, src.RemoteAddr(), dst.RemoteAddr(), err)
 	}
 
 	src.Close()
@@ -204,7 +204,7 @@ func (ss *SCPServer) onNewConn(scon *scp.Conn) bool {
 	return true
 }
 
-func (ss *SCPServer) handleConn(conn net.Conn) {
+func (ss *SCPServer) handleConn(conn net.Conn, connType string) {
 	connectionAccepts.Inc()
 
 	defer func() {
@@ -215,7 +215,11 @@ func (ss *SCPServer) handleConn(conn net.Conn) {
 		}
 	}()
 
-	scon := scp.Server(conn, &scp.Config{ScpServer: ss})
+	disableCipher := connType == "ws"
+	scon := scp.Server(conn, &scp.Config{
+		ScpServer:     ss,
+		DisableCipher: disableCipher,
+	})
 
 	err := scon.Handshake()
 
@@ -234,7 +238,7 @@ func (ss *SCPServer) handleConn(conn net.Conn) {
 }
 
 // Serve accepts incoming connections on the Listener l
-func (ss *SCPServer) Serve(l net.Listener) error {
+func (ss *SCPServer) Serve(l net.Listener, connType string) error {
 	addr := l.Addr().String()
 	glog.Infof("serve: addr=%s", addr)
 
@@ -265,6 +269,6 @@ func (ss *SCPServer) Serve(l net.Listener) error {
 			glog.Infof("accept new connection: client=%s", conn.RemoteAddr())
 		}
 
-		go ss.handleConn(conn)
+		go ss.handleConn(conn, connType)
 	}
 }

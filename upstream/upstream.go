@@ -8,6 +8,7 @@ import (
 	"sync/atomic"
 
 	"github.com/cloudfreexiao/goscon/scp"
+	"github.com/spf13/viper"
 	"github.com/xjdrew/glog"
 )
 
@@ -248,46 +249,41 @@ func upgradeConn(network string, localConn net.Conn, remoteConn *scp.Conn) (conn
 
 // NewConn creates a new connection to target server, pair with remoteConn
 func (u *upstreams) NewConn(remoteConn *scp.Conn) (conn net.Conn, err error) {
-	//------------------------------------------
-	// 2023.3.23 停用原版从配置的主机列表获取主机
-	//------------------------------------------
+	etcdHost := viper.GetString("etcd_host")
+	var tcpConn net.Conn
+	if etcdHost == "" {
+		tserver := remoteConn.TargetServer()
+		host := u.GetHost(tserver)
+		if host == nil {
+			err = ErrNoHost
+			glog.Errorf("get host <%s> failed: %s", tserver, err.Error())
+			return
+		}
 
-	// tserver := remoteConn.TargetServer()
-	// host := u.GetHost(tserver)
-	// if host == nil {
-	// 	err = ErrNoHost
-	// 	glog.Errorf("get host <%s> failed: %s", tserver, err.Error())
-	// 	return
-	// }
+		rand.Shuffle(len(host.addrs), func(i, j int) { host.addrs[i], host.addrs[j] = host.addrs[j], host.addrs[i] })
+		for _, addr := range host.addrs {
+			tcpConn, err = net.DialTCP("tcp", nil, addr)
+			if err == nil {
+				break
+			}
+		}
+		if err != nil {
+			glog.Errorf("connect to <%s> failed: %s", host.Addr, err.Error())
+			return
+		}
+	} else {
+		addr := QueryHost(remoteConn.TargetServer())
+		if addr == "" {
+			err = ErrNoHost
+			glog.Error("get host failed, cause none host is online")
+			return
+		}
 
-	// rand.Shuffle(len(host.addrs), func(i, j int) { host.addrs[i], host.addrs[j] = host.addrs[j], host.addrs[i] })
-	// var tcpConn *net.TCPConn
-	// for _, addr := range host.addrs {
-	// 	tcpConn, err = net.DialTCP("tcp", nil, addr)
-	// 	if err == nil {
-	// 		break
-	// 	}
-	// }
-	// if err != nil {
-	// 	glog.Errorf("connect to <%s> failed: %s", host.Addr, err.Error())
-	// 	return
-	// }
-
-	//------------------------------------------------------------
-	// 2023.3.23 从discovery.go实现的接口 获取一个host:port
-	//      3.31 与特定版本逻辑服解耦 提升通用性
-	//------------------------------------------------------------
-	addr := QueryHost(remoteConn.Version)
-	if addr == "" {
-		err = ErrNoHost
-		glog.Error("get host failed, cause none host is online")
-		return
-	}
-
-	tcpConn, err := net.Dial("tcp", addr)
-	if err != nil {
-		glog.Errorf("connect to <%v> failed: %v", addr, err)
-		return
+		tcpConn, err = net.Dial("tcp", addr)
+		if err != nil {
+			glog.Errorf("connect to <%v> failed: %v", addr, err)
+			return
+		}
 	}
 
 	option := u.option.Load().(*Option)

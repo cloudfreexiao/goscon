@@ -45,9 +45,6 @@ type newConnReq struct {
 	targetServer string
 	// 32 bit flag for different extension, see SCPFlag
 	flag int
-
-	// 2023.3.31
-	version string // 前端版本号
 }
 
 func (r *newConnReq) marshal() []byte {
@@ -71,17 +68,13 @@ func (r *newConnReq) unmarshal(s []byte) (err error) {
 	}
 
 	if len(lines) >= 3 {
-		// r.targetServer = lines[2]
+		r.targetServer = lines[2]
 	}
 
 	if len(lines) >= 4 {
-		// if r.flag, err = strconv.Atoi(lines[3]); err != nil {
-		// 	return
-		// }
-	}
-
-	if len(lines) >= 5 {
-		r.version = lines[4]
+		if r.flag, err = strconv.Atoi(lines[3]); err != nil {
+			return
+		}
 	}
 
 	return

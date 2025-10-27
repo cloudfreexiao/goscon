@@ -32,13 +32,18 @@ type Config struct {
 	// SCPServer
 	// for server
 	ScpServer SCPServer
+
+	// DisableCipher disables encryption if set to true.
+	// Used by both clients and servers.
+	DisableCipher bool
 }
 
 var defaultConfig = &Config{}
 
 func (config *Config) clone() *Config {
 	return &Config{
-		ScpServer: config.ScpServer,
+		ScpServer:     config.ScpServer,
+		DisableCipher: config.DisableCipher,
 	}
 }
 

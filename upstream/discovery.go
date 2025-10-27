@@ -280,7 +280,8 @@ func watchEtcd(etcdHost, etcdPrefix string) {
 func WatchHost() {
 	etcdHost := viper.GetString("etcd_host")
 	if etcdHost == "" {
-		glog.Exit("etcd_host not found in config")
+		glog.Infof("etcd_host not found in config")
+		return
 	}
 
 	etcdPrefix := viper.GetString("etcd_prefix")

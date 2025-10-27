@@ -51,7 +51,9 @@ func (c *cipherConnReader) Read(p []byte) (n int, err error) {
 	if err != nil {
 		return
 	}
-	c.cipher.XORKeyStream(p[:n], p[:n])
+	if c.cipher != nil {
+		c.cipher.XORKeyStream(p[:n], p[:n])
+	}
 	c.count += n
 	return
 }
@@ -75,27 +77,45 @@ func (c *cipherConnWriter) Write(b []byte) (int, error) {
 	defer defaultBufferPool.Put(buf)
 
 	space := buf.Bytes()[:sz]
-	c.cipher.XORKeyStream(space, b)
+	if c.cipher != nil {
+		c.cipher.XORKeyStream(space, b)
+	} else {
+		copy(space, b)
+	}
 	c.count += sz
 	_, err := c.wr.Write(space)
 	return sz, err
 }
 
 func deepCopyCipherConnReader(in *cipherConnReader) *cipherConnReader {
-	return &cipherConnReader{
-		cipher: &(*in.cipher),
-		count:  in.count,
+	result := &cipherConnReader{
+		count: in.count,
 	}
+
+	if in.cipher != nil {
+		result.cipher = &(*in.cipher)
+	}
+
+	return result
 }
 
 func deepCopyCipherConnWriter(out *cipherConnWriter) *cipherConnWriter {
-	return &cipherConnWriter{
-		cipher: &(*out.cipher),
-		count:  out.count,
+	result := &cipherConnWriter{
+		count: out.count,
 	}
+
+	if out.cipher != nil {
+		result.cipher = &(*out.cipher)
+	}
+
+	return result
 }
 
-func newCipherConnReader(secret leu64) *cipherConnReader {
+func newCipherConnReader(secret leu64, disableCipher bool) *cipherConnReader {
+	if disableCipher {
+		return &cipherConnReader{}
+	}
+
 	b := defaultBufferPool.Get(32)
 	defer defaultBufferPool.Put(b)
 	key := b.Bytes()[:32]
@@ -111,7 +131,11 @@ func newCipherConnReader(secret leu64) *cipherConnReader {
 	}
 }
 
-func newCipherConnWriter(secret leu64) *cipherConnWriter {
+func newCipherConnWriter(secret leu64, disableCipher bool) *cipherConnWriter {
+	if disableCipher {
+		return &cipherConnWriter{}
+	}
+
 	b := defaultBufferPool.Get(32)
 	defer defaultBufferPool.Put(b)
 	key := b.Bytes()[:32]
@@ -151,9 +175,6 @@ type Conn struct {
 
 	reused bool // reused conn
 	resend int  // resend data length
-
-	// 2023.3.31
-	Version string // 前端版本号
 }
 
 func (c *Conn) initNewConn(id int, secret leu64) {
@@ -161,8 +182,8 @@ func (c *Conn) initNewConn(id int, secret leu64) {
 	c.secret = secret
 	c.reuseBuffer = defaultLoopBufferPool.Get()
 
-	c.in = newCipherConnReader(c.secret)
-	c.out = newCipherConnWriter(c.secret)
+	c.in = newCipherConnReader(c.secret, c.config.DisableCipher)
+	c.out = newCipherConnWriter(c.secret, c.config.DisableCipher)
 	c.in.SetReader(c.conn)
 	c.out.SetWriter(io.MultiWriter(c.reuseBuffer, c.conn))
 
@@ -413,8 +434,6 @@ func (c *Conn) serverNewHandshake(nq *newConnReq) error {
 	// set config flag
 	c.config.Flag = nq.flag
 
-	// 2023.3.31 关联前端版本号
-	c.Version = nq.version
 	return nil
 }
 

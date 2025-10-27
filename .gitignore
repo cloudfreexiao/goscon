@@ -7,3 +7,6 @@ goscon
 client
 goscon.*.log.*
 goscon.INFO
+goscon.WARNING
+goscon.ERROR
+goscon.FATAL
