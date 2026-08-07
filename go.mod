@@ -8,7 +8,6 @@ require (
 	github.com/prometheus/client_golang v1.23.0
 	github.com/spf13/viper v1.20.1
 	github.com/xjdrew/glog v0.0.0-20191120014404-9a6d6b19a763
-	github.com/xjdrew/gosproto v0.1.0
 	github.com/xtaci/kcp-go v5.4.20+incompatible
 	go.etcd.io/etcd/client/v3 v3.6.4
 	gopkg.in/yaml.v2 v2.4.0

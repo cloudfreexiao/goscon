@@ -24,8 +24,6 @@ client <--> goscon <---> server
 
 若`scp.reuse_time`秒没有被重用，`goscon`断开跟`server`的连接。
 
-编译时开启`sproto`扩展，新建连接后自动给后端发送一条`sproto`消息，宣布客户端的原始`ip`地址信息。
-
 ## build & run & test
 
 * deps: go v1.23+
@@ -34,9 +32,6 @@ client <--> goscon <---> server
 ```bash
 # normal compile
 go build -mod=vendor
-
-# enable sproto hook & debug
-# go build -tags sproto,debug -mod=vendor
 
 ```
 
