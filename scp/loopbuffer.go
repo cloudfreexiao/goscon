@@ -84,6 +84,7 @@ func (b *loopBuffer) CopyTo(dst *loopBuffer) {
 	copy(dst.buf, b.buf)
 	dst.off = b.off
 	dst.looped = b.looped
+	return
 }
 
 func newLoopBuffer(cap int) *loopBuffer {
