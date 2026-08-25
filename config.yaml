@@ -1,6 +1,6 @@
 manager: 127.0.0.1:6620
-#tcp: 0.0.0.0:1248
-#kcp: 0.0.0.0:1248
+tcp: 0.0.0.0:1248
+kcp: 0.0.0.0:1248
 ws: 0.0.0.0:1249
 scp:
   handshake_timeout: 30
@@ -25,14 +25,12 @@ kcp_option:
   opt_rcvwnd: 2048
   opt_stream: true
 ws_option:
-  cert_file:
-  key_file:
-  backlog: 128
-  handshake_timeout: 0
-  frame_size: 4096
-  read_buffer: 4096
-  write_buffer: 4096
   read_timeout: 0
+  keepalive: true
+  keepalive_interval: 60
+  # 置于 Nginx 等反向代理之后时，从指定 HTTP 头解析真实客户端 IP（如 X-Forwarded-For / X-Real-IP）
+  # 为空表示不信任代理头，直接使用 TCP 连接地址。仅在确信请求经由可信代理时才开启，避免被伪造。
+  real_ip_header: ""
 upstream_option:
   net: tcp
 #  resolv:
@@ -42,10 +40,10 @@ upstream_option:
 #    pattern : google
 hosts:
   - name: game1
-    addr: 127.0.0.1:7012
+    addr: 127.0.0.1:11240
     weight: 100
-  # - name: test2
-  #   addr: 127.0.0.1:11249
-  #   weight: 100
+  - name: game2
+    addr: 127.0.0.1:11241
+    weight: 100
 #etcd_host: 127.0.0.1:2379
 #etcd_prefix: /mt2/Devel/UserGate

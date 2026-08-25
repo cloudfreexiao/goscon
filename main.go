@@ -115,7 +115,7 @@ func main() {
 				defer l.Close()
 				defer wg.Done()
 				err := defaultServer.Serve(l, "kcp")
-				glog.Errorf("kcp listen stop: addr=%s, err=%s", tcpListen, err.Error())
+				glog.Errorf("kcp listen stop: addr=%s, err=%s", kcpListen, err.Error())
 			}(l)
 		}
 	}
@@ -135,7 +135,7 @@ func main() {
 			defer l.Close()
 			defer wg.Done()
 			err := defaultServer.Serve(l, "ws")
-			glog.Errorf("ws listen stop: addr=%s, err=%s", tcpListen, err.Error())
+			glog.Errorf("ws listen stop: addr=%s, err=%s", wsListen, err.Error())
 		}(l)
 	}
 
