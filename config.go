@@ -182,14 +182,3 @@ func configItemTime(name string) time.Duration {
 	}
 	return time.Duration(seconds) * time.Second
 }
-
-func configItemString(name string) string {
-	configMu.Lock()
-	defer configMu.Unlock()
-	if v, ok := configCache[name]; ok {
-		return v.(string)
-	}
-	v := viper.GetString(name)
-	configCache[name] = v
-	return v
-}

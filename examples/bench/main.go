@@ -2,10 +2,8 @@ package main
 
 import (
 	"bufio"
-	"context"
 	"errors"
 	"flag"
-	"io"
 	"log"
 	"net"
 	"net/http"
@@ -13,74 +11,9 @@ import (
 	"time"
 
 	"github.com/cloudfreexiao/goscon/scp"
-	"github.com/gobwas/ws"
+	"github.com/cloudfreexiao/goscon/ws"
 	"github.com/xtaci/kcp-go"
 )
-
-type wsConn struct {
-	net.Conn
-	length int64
-	offset int64
-}
-
-func (c *wsConn) Read(b []byte) (int, error) {
-	remain := c.length - c.offset
-	if remain > 0 {
-		sz := int64(len(b))
-		if sz > remain {
-			sz = remain
-		}
-		n, err := io.ReadFull(c.Conn, b[:sz])
-		c.offset += int64(n)
-		return n, err
-	}
-
-	for {
-		header, err := ws.ReadHeader(c.Conn)
-		if err != nil {
-			return 0, err
-		}
-		switch header.OpCode {
-		case ws.OpClose:
-			return 0, io.EOF
-		case ws.OpPing:
-			payload := make([]byte, header.Length)
-			if _, err := io.ReadFull(c.Conn, payload); err != nil {
-				return 0, err
-			}
-			if err := ws.WriteFrame(c.Conn, ws.NewPongFrame(payload)); err != nil {
-				return 0, err
-			}
-			continue
-		default:
-			c.length = header.Length
-			c.offset = 0
-			sz := int64(len(b))
-			if sz > header.Length {
-				sz = header.Length
-			}
-			n, err := io.ReadFull(c.Conn, b[:sz])
-			c.offset += int64(n)
-			return n, err
-		}
-	}
-}
-
-func (c *wsConn) Write(b []byte) (int, error) {
-	f := ws.MaskFrame(ws.NewBinaryFrame(b))
-	if err := ws.WriteFrame(c.Conn, f); err != nil {
-		return 0, err
-	}
-	return len(b), nil
-}
-
-func dialWS(addr string) (net.Conn, error) {
-	conn, _, _, err := ws.Dial(context.Background(), "ws://"+addr+"/")
-	if err != nil {
-		return nil, err
-	}
-	return &wsConn{Conn: conn}, nil
-}
 
 type Stat struct {
 	conn    int
@@ -115,7 +48,7 @@ func dialWithOptions(network, connect string) (net.Conn, error) {
 		conn.SetWindowSize(kcpSndWnd, kcpRcvWnd)
 		return conn, nil
 	} else if network == "ws" {
-		return dialWS(connect)
+		return ws.Dial(connect)
 	} else {
 		return nil, errors.New("Invalid network")
 	}
